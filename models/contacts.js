@@ -11,7 +11,7 @@ const listContacts = async () => {
   return contacts;
 };
 
-const getById = async (id) => {
+const getContactById = async (id) => {
   const contacts = await listContacts();
 
   const result = contacts.find((item) => item.id === id);
@@ -55,7 +55,7 @@ const updateContact = async (id, body) => {
 
 module.exports = {
   listContacts,
-  getById,
+  getContactById,
   removeContact,
   addContact,
   updateContact,
