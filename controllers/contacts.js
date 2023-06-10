@@ -36,9 +36,16 @@ const addContact = async (req, res) => {
 
 const updateContact = async (req, res) => {
   const { error } = addSchema.validate(req.body);
-  if (error) {
+  const { name, email, phone } = req.body;
+
+  if (!name && !email && !phone) {
     throw HttpError(400, "missing fields");
   }
+  if (error) {
+    const errMessage = `missing required "${error.details[0].path[0]}" field`;
+    throw HttpError(400, errMessage);
+  }
+
   const { id } = req.params;
   const result = await contacts.updateContact(id, req.body);
   if (!result) {
