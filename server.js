@@ -5,6 +5,8 @@ const app = require("./app");
 const DB_HOST =
   "mongodb+srv://Misha:PBYK1kIejqDDfgMP@cluster0.zwlkcdj.mongodb.net/db-contacts?retryWrites=true&w=majority";
 
+mongoose.set("strictQuery", true);
+
 mongoose
   .connect(DB_HOST)
   .then(() => {
