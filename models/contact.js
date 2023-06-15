@@ -16,7 +16,6 @@ const contactSchema = new Schema(
     phone: {
       type: String,
       match: /^\(\d{3}\) \d{3}-\d{4}$/,
-
       required: true,
     },
     favorite: {
