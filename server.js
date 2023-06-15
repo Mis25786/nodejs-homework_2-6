@@ -12,6 +12,6 @@ mongoose
     app.listen(3000);
   })
   .catch((err) => {
-    console.log(err);
+    console.log(err.message);
     process.exit(1);
   });
