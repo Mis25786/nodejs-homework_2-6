@@ -15,7 +15,7 @@ const contactSchema = new Schema(
     },
     phone: {
       type: String,
-      match: /^\(\d{3}\) \d{3}-\d{4}$/,
+      // match: /^\(\d{3}\) \d{3}-\d{4}$/,
       required: true,
     },
     favorite: {
@@ -32,7 +32,6 @@ const addSchema = Joi.object({
   name: Joi.string().required(),
   email: Joi.string().required(),
   phone: Joi.string().required(),
-  favorite: Joi.boolean().required(),
 });
 
 const updateFavoriteSchema = Joi.object({
