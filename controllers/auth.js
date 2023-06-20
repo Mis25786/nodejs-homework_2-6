@@ -26,19 +26,18 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, subscription } = req.body;
 
   const user = await User.findOne({ email });
-  console.log("user :>> ", user);
 
   if (!user) {
-    throw HttpError(401, "Email or password invalid");
+    throw HttpError(401, "Email or password is wrong");
   }
 
   const passwordCompare = await bcrypt.compare(password, user.password);
 
   if (!passwordCompare) {
-    throw HttpError(401, "Email or password invalid");
+    throw HttpError(401, "Email or password is wrong");
   }
 
   const payload = {
@@ -48,7 +47,7 @@ const login = async (req, res) => {
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
   await User.findByIdAndUpdate(user._id, { token });
 
-  res.json({ token });
+  res.status(200).json({ token, email, subscription });
 };
 
 const getCurrent = async (req, res) => {
