@@ -8,7 +8,6 @@ const { HttpError, ctrlWrapper } = require("../helpers");
 
 const getAll = async (req, res) => {
   const { _id: owner } = req.user;
-  console.log("req.query :>> ", req.query);
   const { page = 1, limit = 20 } = req.query;
   const skip = (page - 1) * limit;
   const result = await Contact.find({ owner }, "-createdAt -updatedAt", {
