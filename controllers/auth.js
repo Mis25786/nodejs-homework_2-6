@@ -26,7 +26,14 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  const { email, password, subscription } = req.body;
+  const { email, password } = req.body;
+  console.log("req.body :>> ", req.body);
+  console.log("email :>> ", email);
+  console.log("password :>> ", password);
+
+  // const { subscription } = req.user;
+  // console.log("req.user :>> ", req.user);
+  // console.log("subscription :>> ", subscription);
 
   const user = await User.findOne({ email });
 
@@ -47,7 +54,7 @@ const login = async (req, res) => {
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
   await User.findByIdAndUpdate(user._id, { token });
 
-  res.status(200).json({ token, email, subscription });
+  res.status(200).json({ token, email, subscription: user.subscription });
 };
 
 const getCurrent = async (req, res) => {
