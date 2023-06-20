@@ -27,13 +27,6 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   const { email, password } = req.body;
-  console.log("req.body :>> ", req.body);
-  console.log("email :>> ", email);
-  console.log("password :>> ", password);
-
-  // const { subscription } = req.user;
-  // console.log("req.user :>> ", req.user);
-  // console.log("subscription :>> ", subscription);
 
   const user = await User.findOne({ email });
 
