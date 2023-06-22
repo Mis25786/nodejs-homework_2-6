@@ -20,8 +20,10 @@ const register = async (req, res) => {
   const newUser = await User.create({ ...req.body, password: hashPassword });
 
   res.status(201).json({
-    email: newUser.email,
-    subscription: newUser.subscription,
+    newUser: {
+      email: newUser.email,
+      subscription: newUser.subscription,
+    },
   });
 };
 
@@ -47,7 +49,9 @@ const login = async (req, res) => {
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
   await User.findByIdAndUpdate(user._id, { token });
 
-  res.status(200).json({ token, email, subscription: user.subscription });
+  res
+    .status(200)
+    .json({ token, user: { email, subscription: user.subscription } });
 };
 
 const getCurrent = async (req, res) => {
