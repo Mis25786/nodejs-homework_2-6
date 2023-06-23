@@ -78,9 +78,12 @@ const logout = async (req, res) => {
   });
 };
 
+const updateAvatar = async (req, res) => {};
+
 module.exports = {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
   getCurrent: ctrlWrapper(getCurrent),
   logout: ctrlWrapper(logout),
+  updateAvatar: ctrlWrapper(updateAvatar),
 };
