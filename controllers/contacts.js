@@ -7,15 +7,19 @@ const {
 const { HttpError, ctrlWrapper } = require("../helpers");
 
 const getAll = async (req, res) => {
-  const result = await Contact.find();
+  const { _id: owner } = req.user;
+  const { page = 1, limit = 20 } = req.query;
+  const skip = (page - 1) * limit;
+  const result = await Contact.find({ owner }, "-createdAt -updatedAt", {
+    skip,
+    limit,
+  }).populate("owner", "name email");
   res.json(result);
 };
 
 const getById = async (req, res) => {
   const { id } = req.params;
-  console.log(id);
   const result = await Contact.findById(id);
-  console.log(result);
   if (!result) {
     throw HttpError(404, "Not found");
   }
@@ -28,7 +32,9 @@ const addContact = async (req, res) => {
     const errMessage = `missing required "${error.details[0].path[0]}" field`;
     throw HttpError(400, errMessage);
   }
-  const result = await Contact.create(req.body);
+
+  const { _id: owner } = req.user;
+  const result = await Contact.create({ ...req.body, owner });
   res.status(201).json(result);
 };
 
@@ -70,7 +76,6 @@ const updateStatusContact = async (req, res) => {
 const deleteContact = async (req, res) => {
   const { id } = req.params;
   const result = await Contact.findByIdAndRemove(id);
-  console.log(result);
   if (!result) {
     throw HttpError(404, "Not found");
   }
