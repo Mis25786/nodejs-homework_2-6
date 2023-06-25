@@ -10,7 +10,7 @@ const { HttpError, ctrlWrapper } = require("../helpers");
 
 const { SECRET_KEY } = process.env;
 
-const avatarsDir = path.join(__dirname, "../", "public", "avatars");
+const avatarsDir = path.join(__dirname, "../", "public", "avatars"); // шлях до папки з аватарками
 
 const register = async (req, res) => {
   const { email, password } = req.body;
@@ -21,7 +21,9 @@ const register = async (req, res) => {
   }
 
   const hashPassword = await bcrypt.hash(password, 10);
-  const avatarURL = gravatar.url(email);
+  const avatarURL = gravatar.url(email); // коли реєструємося даємо тимчасову аватарку
+  console.log("req.file register", req.file);
+  console.log("req.body register", req.body);
 
   const newUser = await User.create({
     ...req.body,
@@ -85,15 +87,18 @@ const logout = async (req, res) => {
 const updateAvatar = async (req, res) => {
   const { _id } = req.user;
 
-  const { path: tempUpload, originalname } = req.file;
+  console.log("req.file updateAvatar", req.file);
+  console.log("req.body updateAvatar", req.body);
+
+  const { path: tempUpload, originalname } = req.file; // шлях tempUpload та імя originalname
 
   const filename = `${_id}_${originalname}`;
 
-  const resultUpload = path.join(avatarsDir, filename);
+  const resultUpload = path.join(avatarsDir, filename); // де має зберігатися
 
-  await fs.rename(tempUpload, resultUpload);
+  await fs.rename(tempUpload, resultUpload); // переміщуємо з тимчасового temp в public
 
-  const avatarURL = path.join("avatars", filename);
+  const avatarURL = path.join("avatars", filename); // цей шлях записуємо в базу
 
   await User.findByIdAndUpdate(_id, { avatarURL });
 
