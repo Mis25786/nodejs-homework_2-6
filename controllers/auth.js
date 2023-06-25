@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const gravatar = require("gravatar");
 const path = require("path");
 const fs = require("fs/promises");
+const Jimp = require("jimp");
 
 const { User } = require("../models/user");
 
@@ -22,8 +23,6 @@ const register = async (req, res) => {
 
   const hashPassword = await bcrypt.hash(password, 10);
   const avatarURL = gravatar.url(email); // коли реєструємося даємо тимчасову аватарку
-  console.log("req.file register", req.file);
-  console.log("req.body register", req.body);
 
   const newUser = await User.create({
     ...req.body,
@@ -87,8 +86,12 @@ const logout = async (req, res) => {
 const updateAvatar = async (req, res) => {
   const { _id } = req.user;
 
-  console.log("req.file updateAvatar", req.file);
-  console.log("req.body updateAvatar", req.body);
+  const { file } = req;
+  const img = await Jimp.read(file.path);
+  await img
+    .autocrop()
+    .cover(250, 250, Jimp.HORIZONTAL_ALIGN_CENTER || Jimp.VERTICAL_ALIGN_MIDDLE)
+    .writeAsync(file.path);
 
   const { path: tempUpload, originalname } = req.file; // шлях tempUpload та імя originalname
 
