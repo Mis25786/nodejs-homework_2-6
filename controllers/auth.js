@@ -11,7 +11,7 @@ const { HttpError, ctrlWrapper } = require("../helpers");
 
 const { SECRET_KEY } = process.env;
 
-const avatarsDir = path.join(__dirname, "../", "public", "avatars"); // шлях до папки з аватарками
+const avatarsDir = path.join(__dirname, "../", "public", "avatars");
 
 const register = async (req, res) => {
   const { email, password } = req.body;
@@ -22,7 +22,7 @@ const register = async (req, res) => {
   }
 
   const hashPassword = await bcrypt.hash(password, 10);
-  const avatarURL = gravatar.url(email); // коли реєструємося даємо тимчасову аватарку
+  const avatarURL = gravatar.url(email);
 
   const newUser = await User.create({
     ...req.body,
@@ -86,6 +86,10 @@ const logout = async (req, res) => {
 const updateAvatar = async (req, res) => {
   const { _id } = req.user;
 
+  const { path: tempUpload, originalname } = req.file;
+
+  console.log("req.file", req.file);
+
   const { file } = req;
   const img = await Jimp.read(file.path);
   await img
@@ -93,15 +97,13 @@ const updateAvatar = async (req, res) => {
     .cover(250, 250, Jimp.HORIZONTAL_ALIGN_CENTER || Jimp.VERTICAL_ALIGN_MIDDLE)
     .writeAsync(file.path);
 
-  const { path: tempUpload, originalname } = req.file; // шлях tempUpload та імя originalname
-
   const filename = `${_id}_${originalname}`;
 
-  const resultUpload = path.join(avatarsDir, filename); // де має зберігатися
+  const resultUpload = path.join(avatarsDir, filename);
 
-  await fs.rename(tempUpload, resultUpload); // переміщуємо з тимчасового temp в public
+  await fs.rename(tempUpload, resultUpload);
 
-  const avatarURL = path.join("avatars", filename); // цей шлях записуємо в базу
+  const avatarURL = path.join("avatars", filename);
 
   await User.findByIdAndUpdate(_id, { avatarURL });
 
