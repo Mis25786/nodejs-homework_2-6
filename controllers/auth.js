@@ -10,7 +10,8 @@ const { User } = require("../models/user");
 
 const { HttpError, ctrlWrapper, sendEmail } = require("../helpers");
 
-const { SECRET_KEY, BASE_URL } = process.env;
+const { SECRET_KEY } = process.env;
+// const { SECRET_KEY, BASE_URL } = process.env;
 
 const avatarsDir = path.join(__dirname, "../", "public", "avatars");
 
@@ -36,7 +37,8 @@ const register = async (req, res) => {
   const verifyEmail = {
     to: email,
     subject: "Verify email",
-    html: `<a target="_blank" href="${BASE_URL}/auth/verify/${verificationToken}" >Click verify email</a>`,
+    // html: `<a target="_blank" href="${BASE_URL}/auth/verify/${verificationToken}" >Click verify email</a>`,
+    html: `<a target="_blank" href="https://db-contacts-ki5i.onrender.com/auth/verify/${verificationToken}" >Click verify email</a>`,
   };
 
   await sendEmail(verifyEmail);
